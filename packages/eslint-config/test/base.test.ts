@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ruleIdsFor } from './rule-ids-for';
+import { isIgnored, ruleIdsFor } from './rule-ids-for';
 
 const lines = (count: number, makeLine: (index: number) => string): string =>
   Array.from({ length: count }, (_, index) => makeLine(index)).join('\n');
@@ -55,5 +55,18 @@ describe('base preset size limits', () => {
 
   it('rejects a function with complexity above 8', async () => {
     expect(await ruleIdsFor(branchyFunction, 'src/branchy.ts')).toContain('complexity');
+  });
+});
+
+describe('base preset ignores', () => {
+  it.each(['dist/index.mjs', 'apps/web/src/routeTree.gen.ts'])(
+    'skips generated file %s',
+    async (file) => {
+      expect(await isIgnored(file)).toBe(true);
+    },
+  );
+
+  it('does not skip hand-written source', async () => {
+    expect(await isIgnored('src/routes/index.tsx')).toBe(false);
   });
 });

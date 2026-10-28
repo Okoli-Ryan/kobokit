@@ -9,6 +9,7 @@ const generatedOutput = [
   '**/.turbo/**',
   '**/coverage/**',
   '**/.tanstack/**',
+  '**/routeTree.gen.ts',
 ];
 
 export const baseConfig = defineConfig([

@@ -137,7 +137,7 @@ One entry per new concept. Template:
   ```json
   "exports": {
     ".": {
-      "import": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
+      "import": { "types": "./dist/index.d.mts", "default": "./dist/index.mjs" },
       "require": { "types": "./dist/index.d.cts", "default": "./dist/index.cjs" }
     }
   }
@@ -192,3 +192,35 @@ One entry per new concept. Template:
   output (`react/jsx-runtime` is imported, not inlined).
 - **Interview questions:** Dependency versus peer dependency? Why is React usually a peer? What
   breaks if a peer range is wider than what you tested?
+
+## TanStack Start and file-based routing
+
+- **Analogy:** A hotel where the room numbers are painted on doors by the building itself. You
+  put a file in `src/routes/` and the framework works out the door (URL) and updates the
+  directory (the route tree) for you.
+- **Minimal example:** `src/routes/index.tsx`
+
+  ```tsx
+  export const Route = createFileRoute('/')({ component: HomePage });
+  ```
+
+  The Vite plugin `tanstackStart()` reads `src/routes/` and writes `src/routeTree.gen.ts`, which
+  `getRouter()` imports.
+
+- **Gotchas:** the React Vite plugin must come after the Start plugin. `routeTree.gen.ts`
+  appears only after the first `dev` or `build`, so we commit it (it marks itself as generated;
+  lint and Prettier skip it). Start runs your code on the server and in the browser;
+  `verbatimModuleSyntax` can leak server code into the client bundle, so apps turn it off.
+- **Interview questions:** What does the router plugin generate, and why commit it? How does
+  server-side rendering differ from a single-page app? Why does plugin order matter in Vite?
+
+## Testing a Node server without fixed ports
+
+- **Analogy:** Asking the hotel for any free room instead of insisting on room 301, so two guests
+  never fight over it.
+- **Minimal example:** `server.listen(0, () => { const { port } = server.address() as AddressInfo; })`
+- **Gotchas:** close the server in `afterEach`, or the test process hangs. Port 0 asks the
+  operating system for a free port. Keeping the HTTP wiring in `createApiServer()` and the
+  `listen` call in `main.ts` lets tests start the server without side effects at import time.
+- **Interview questions:** Why separate creating a server from listening? What would a flaky
+  port conflict in CI look like?

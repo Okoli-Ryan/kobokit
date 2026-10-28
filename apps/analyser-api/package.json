@@ -1,0 +1,27 @@
+{
+  "name": "@kobokit/analyser-api",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Node API for the kobokit statement analyser (placeholder).",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "start": "node dist/main.mjs",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@kobokit/eslint-config": "workspace:*",
+    "@kobokit/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "eslint": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
