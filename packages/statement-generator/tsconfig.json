@@ -1,0 +1,4 @@
+{
+  "extends": "@kobokit/tsconfig/base.json",
+  "include": ["src", "test", "tsup.config.ts"]
+}

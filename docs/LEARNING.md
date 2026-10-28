@@ -102,3 +102,60 @@ One entry per new concept. Template:
   TypeScript versions they support; ignoring that is how this step hit two version problems.
 - **Interview questions:** How is flat config different from `.eslintrc`? Why `max-lines` and
   `complexity` rather than review comments? What is the cost of type-aware linting?
+
+## What tsup produces, and why both ESM and CJS
+
+- **Analogy:** A printing press making one book in two editions: a modern paperback (ESM,
+  `import`) and an older hardback (CJS, `require`), plus an index card (`.d.ts`) that tells
+  readers' editors what is inside without opening the book.
+- **Minimal example:** `tsup.config.ts`
+
+  ```ts
+  export default defineConfig({ entry: ['src/index.ts'], format: ['esm', 'cjs'], dts: true });
+  ```
+
+  Output for each library: `dist/index.js` (ESM), `dist/index.cjs` (CJS), `dist/index.d.ts` and
+  `dist/index.d.cts` (types for each), plus source maps.
+
+- **Why both:** a consumer's tool decides the format, not you. Older Node tooling and Jest setups
+  still `require()`; modern apps `import`. Recent Node versions can `require()` ESM in many
+  cases, which weakens the case for CJS over time, but shipping both is still the safe default for
+  a public library.
+- **Gotchas:** if the same package is loaded once as ESM and once as CJS, you get two copies, so
+  module-level state (a cache, a singleton, `instanceof`) can disagree. This is the dual-package
+  hazard; keep libraries stateless. tsup bundles with esbuild but builds types with TypeScript,
+  so a type error can fail `build` even when the JavaScript is fine.
+- **Interview questions:** What does tsup do that `tsc` does not? What is the dual-package hazard?
+  Why does a `.d.cts` file exist? When would you drop CJS?
+
+## The `exports` map
+
+- **Analogy:** A building with named doors. Each door (`import`, `require`) leads to one room,
+  and anything without a door is walled off, so nobody can reach into `dist/internal.js`.
+- **Minimal example:**
+
+  ```json
+  "exports": {
+    ".": {
+      "import": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
+      "require": { "types": "./dist/index.d.cts", "default": "./dist/index.cjs" }
+    }
+  }
+  ```
+
+- **Gotchas:** inside each condition, `types` must come before `default`, because the first
+  matching condition wins. `main`, `module` and `types` at the top level exist only for old
+  resolvers that ignore `exports`. `module` is a bundler convention, not part of Node. Always
+  test the published shape (`publint`, `attw`), because the workspace link hides mistakes.
+- **Interview questions:** What happens to a deep import not listed in `exports`? What does a
+  condition's order mean? Why can types resolve while the runtime import fails, or the reverse?
+
+## pnpm's build-script allowlist
+
+- **Analogy:** A building's visitor policy. Packages arriving with an "install script" are
+  stopped at reception until someone approves them.
+- **Gotchas:** install scripts run arbitrary code on your machine during `pnpm install`, which is
+  a classic supply-chain attack route, so pnpm 11 denies them by default. Verify the build and
+  tests still work before granting access; here esbuild did not need its script.
+- **Interview questions:** Why are install scripts risky? What does `allowBuilds` record, and why
+  commit it?
