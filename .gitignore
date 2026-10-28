@@ -1,0 +1,12 @@
+node_modules
+dist
+.output
+.turbo
+coverage
+.tanstack
+*.tsbuildinfo
+
+# Secrets: never commit these. Copy .env.example to .env instead.
+.env
+.env.*
+!.env.example

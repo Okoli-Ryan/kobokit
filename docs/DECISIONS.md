@@ -1,0 +1,16 @@
+# Decisions
+
+One line per decision: what we chose, the alternative, and why.
+
+| #   | Decision                                                                    | Alternative                       | Why                                                                                                                                         |
+| --- | --------------------------------------------------------------------------- | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | pnpm workspaces + Turborepo                                                 | Nx, or npm workspaces alone       | Turbo is small enough to explain fully; pnpm's strict `node_modules` catches undeclared dependencies, which matters for published packages. |
+| 2   | One monorepo for all packages and apps                                      | One repo per package              | The packages depend on each other and change together; one PR can span them, and one CI run proves they still fit.                          |
+| 3   | Turbo tasks: `typecheck` and `test` depend on `^build`                      | No dependency, resolve to sources | Consumers import the built output, exactly as npm users will, so we catch broken `exports` maps early.                                      |
+| 4   | `.nvmrc` = 24, `engines.node` >= 22.19.0                                    | Pin one version everywhere        | Develop on current LTS; the floor is the MCP Inspector minimum, so the MCP server stays usable by others.                                   |
+| 5   | `packageManager` field pins pnpm 11.18.0                                    | Leave unpinned                    | Same pnpm locally and in CI, so the lockfile does not churn.                                                                                |
+| 6   | Prettier run on its own (`format`, `format:check`)                          | Prettier as an ESLint plugin      | Faster, and style rules stay separate from correctness rules.                                                                               |
+| 7   | `.gitignore` ignores `.env` and `.env.*` but allows `.env.example`          | Ignore only `.env`                | Also covers `.env.local` and similar variants.                                                                                              |
+| 8   | `* text=auto eol=lf` and Prettier `endOfLine: lf`                           | Default per OS                    | Developed on Windows, run in Linux CI; one line ending avoids noisy diffs and lint failures.                                                |
+| 9   | Web apps use TanStack Start, not Next.js                                    | Next.js App Router                | Chosen by the author. Affects the tsconfig preset and ESLint config for the apps.                                                           |
+| 10  | Docs-only coding rules in `docs/CODING_RULES.md`, enforced later via ESLint | Rules only in prose               | A rule that is not checked by a tool drifts.                                                                                                |
