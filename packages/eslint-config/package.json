@@ -1,0 +1,31 @@
+{
+  "name": "@kobokit/eslint-config",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Shared ESLint flat configs, including the readability limits from docs/CODING_RULES.md.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    "./base": "./src/base.js",
+    "./react": "./src/react.js"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@kobokit/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "eslint": "catalog:",
+    "react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "dependencies": {
+    "@eslint/js": "catalog:",
+    "eslint-plugin-react": "catalog:",
+    "eslint-plugin-react-hooks": "catalog:",
+    "typescript-eslint": "catalog:"
+  }
+}

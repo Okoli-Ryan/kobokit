@@ -1,18 +1,18 @@
 # Coding rules
 
 Every line here must be explainable in an interview. Where possible, ESLint enforces these rules
-(wired up in `packages/eslint-config`), so they fail `pnpm lint` instead of drifting.
+(in `packages/eslint-config`, each rule covered by a test), so they fail `pnpm lint` instead of drifting.
 
 ## Size
 
-- A file has at most 150 lines (`max-lines`).
-- A function has at most 30 lines (`max-lines-per-function`).
+- A file has at most 150 lines of code (`max-lines`; blank lines and comments do not count).
+- A function has at most 30 lines of code (`max-lines-per-function`; not enforced inside test files).
 - Cyclomatic complexity is at most 8 (`complexity`).
 - A file does one thing. If its name needs "and", split it.
 
 ## Style
 
-- Named exports only; no default exports (except where a framework requires them).
+- Named exports only; no default exports (allowed in `*.config.*` files, which tools require).
 - No `any`. Use `unknown` and narrow it.
 - Prefer small pure functions over classes. Side effects (I/O, time, randomness) go at the edges.
 - Name things for what they mean in the domain (`narration`, `balance`), not how they are stored.

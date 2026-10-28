@@ -50,3 +50,55 @@ One entry per new concept. Template:
 - **Interview questions:** When would you split into separate repos? (Different owners, release
   cadence, or access control.) What does `workspace:*` become when published? What is phantom
   dependency, and how does pnpm prevent it?
+
+## pnpm catalogs
+
+- **Analogy:** A shared price list on the shop wall. Each product tag says "price: see list", so
+  changing the list changes every tag.
+- **Minimal example:** `pnpm-workspace.yaml` has `catalog: { typescript: ~6.0.3 }`; a package
+  writes `"typescript": "catalog:"`.
+- **Gotchas:** `catalog:` is replaced with the real version when a package is published, so
+  consumers never see it. An upgrade now touches every package at once, so Turbo's cache misses
+  everywhere. A bad pin affects the whole repo.
+- **Interview questions:** Catalog versus `overrides`? (Catalogs are explicit per dependency;
+  overrides force a version everywhere, including transitive dependencies.) How does it help
+  keep one TypeScript version?
+
+## Strict TypeScript options worth defending
+
+- **Analogy:** Smoke alarms. `strict` is the standard alarm; `noUncheckedIndexedAccess` is the one
+  in the cupboard you forgot, which fires when you assume the shelf is not empty.
+- **Minimal example:**
+
+  ```ts
+  const amounts: number[] = [];
+  const first = amounts[0]; // number | undefined with noUncheckedIndexedAccess
+  first.toFixed(2); // error: possibly undefined
+  ```
+
+- **Gotchas:** `verbatimModuleSyntax` forces `import type` for types, so the compiler never has
+  to guess what to erase. `moduleResolution: Bundler` lets imports omit file extensions, which is
+  fine because tsup bundles, but wrong for code run directly by Node.
+- **Interview questions:** What does `strict` turn on? Why is `noUncheckedIndexedAccess` not in
+  `strict`? What is the difference between `Bundler` and `NodeNext` resolution?
+
+## ESLint flat config, and testing your lint rules
+
+- **Analogy:** A building code and an inspector. The config is the code; the test feeds the
+  inspector a deliberately bad blueprint and checks it gets rejected.
+- **Minimal example:**
+
+  ```ts
+  const [result] = await new ESLint({
+    overrideConfigFile: true,
+    overrideConfig: baseConfig,
+  }).lintText('export const x: any = 1;', { filePath });
+  expect(result.messages.map((m) => m.ruleId)).toContain('@typescript-eslint/no-explicit-any');
+  ```
+
+- **Gotchas:** Flat config is an array; later entries override earlier ones, and `files` globs
+  scope a block. A rule that is silently off (a typo in the name, a wrong glob) looks identical
+  to a rule that passes, which is why the negative tests matter. Plugins declare which ESLint and
+  TypeScript versions they support; ignoring that is how this step hit two version problems.
+- **Interview questions:** How is flat config different from `.eslintrc`? Why `max-lines` and
+  `complexity` rather than review comments? What is the cost of type-aware linting?
