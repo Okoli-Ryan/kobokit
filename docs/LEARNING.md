@@ -159,3 +159,36 @@ One entry per new concept. Template:
   tests still work before granting access; here esbuild did not need its script.
 - **Interview questions:** Why are install scripts risky? What does `allowBuilds` record, and why
   commit it?
+
+## Testing React with Jest and React Testing Library
+
+- **Analogy:** A mystery shopper. RTL does not inspect the shop's wiring (component state); it
+  walks in, looks for "the button labelled Pay" the way a customer would, and reports whether it
+  can find it.
+- **Minimal example:**
+
+  ```tsx
+  render(<PdfSourceViewer documentTitle="Sample statement" />);
+  expect(screen.getByRole('region', { name: 'Sample statement' })).toBeInTheDocument();
+  ```
+
+- **Gotchas:** query by role and accessible name, not by class or test id, so tests also check
+  accessibility. `jsdom` simulates the DOM but has no layout, so widths and positions are
+  always zero. `@swc/jest` removes types without checking them, so a green test says nothing
+  about types; `tsc` does that. While wiring this up I lost a backslash in a transform regex;
+  the pattern still matched by accident, and only the lint rule `no-useless-escape` caught it.
+- **Interview questions:** Why `getByRole` over `getByTestId`? What does jsdom not do? Why keep
+  type checking separate from the test transform? What does `render` clean up between tests?
+
+## Peer dependencies
+
+- **Analogy:** A plug adapter. It does not bring its own mains socket; it expects the wall to
+  have one, and two sockets in one wall would be a hazard.
+- **Minimal example:** `"peerDependencies": { "react": "^19.0.0" }`, with React also in
+  `devDependencies` so the library's own tests can run.
+- **Gotchas:** if the library bundled its own React, hooks would break ("invalid hook call"),
+  because the app and the library would hold two Reacts. A peer range promises compatibility
+  you must have tested. Bundlers must leave the peer external, which we checked in the built
+  output (`react/jsx-runtime` is imported, not inlined).
+- **Interview questions:** Dependency versus peer dependency? Why is React usually a peer? What
+  breaks if a peer range is wider than what you tested?

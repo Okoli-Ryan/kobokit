@@ -2,16 +2,30 @@ packages:
   - 'apps/*'
   - 'packages/*'
 allowBuilds:
+  '@parcel/watcher': false
+  '@swc/core': false
   esbuild: false
+  unrs-resolver: false
 catalog:
   '@arethetypeswrong/cli': ^0.18.5
   '@eslint/js': ~9.39.5
+  '@jest/globals': ^30.5.2
+  '@swc/core': ^1.16.20
+  '@swc/jest': ^0.2.39
+  '@testing-library/dom': ^10.4.2
+  '@testing-library/jest-dom': ^7.0.1
+  '@testing-library/react': ^16.3.3
   '@types/node': ^26.6.5
+  '@types/react': ^19.3.0
+  '@types/react-dom': ^19.3.0
   eslint: ~9.39.5
   eslint-plugin-react: ^7.37.5
   eslint-plugin-react-hooks: ^7.1.1
+  jest: ^30.5.2
+  jest-environment-jsdom: ^30.5.2
   publint: ^0.3.25
   react: ^19.3.1
+  react-dom: ^19.3.1
   tsdown: ^0.23.2
   typescript: ~6.0.3
   typescript-eslint: ^8.72.1

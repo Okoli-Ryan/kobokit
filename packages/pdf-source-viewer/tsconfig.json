@@ -1,0 +1,4 @@
+{
+  "extends": "@kobokit/tsconfig/react.json",
+  "include": ["src", "test", "jest.config.js", "jest.setup.ts", "tsdown.config.ts"]
+}
