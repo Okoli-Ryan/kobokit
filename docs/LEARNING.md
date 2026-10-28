@@ -78,7 +78,7 @@ One entry per new concept. Template:
 
 - **Gotchas:** `verbatimModuleSyntax` forces `import type` for types, so the compiler never has
   to guess what to erase. `moduleResolution: Bundler` lets imports omit file extensions, which is
-  fine because tsup bundles, but wrong for code run directly by Node.
+  fine because tsdown bundles, but wrong for code run directly by Node.
 - **Interview questions:** What does `strict` turn on? Why is `noUncheckedIndexedAccess` not in
   `strict`? What is the difference between `Bundler` and `NodeNext` resolution?
 
@@ -103,18 +103,18 @@ One entry per new concept. Template:
 - **Interview questions:** How is flat config different from `.eslintrc`? Why `max-lines` and
   `complexity` rather than review comments? What is the cost of type-aware linting?
 
-## What tsup produces, and why both ESM and CJS
+## What tsdown produces, and why both ESM and CJS
 
 - **Analogy:** A printing press making one book in two editions: a modern paperback (ESM,
   `import`) and an older hardback (CJS, `require`), plus an index card (`.d.ts`) that tells
   readers' editors what is inside without opening the book.
-- **Minimal example:** `tsup.config.ts`
+- **Minimal example:** `tsdown.config.ts`
 
   ```ts
   export default defineConfig({ entry: ['src/index.ts'], format: ['esm', 'cjs'], dts: true });
   ```
 
-  Output for each library: `dist/index.js` (ESM), `dist/index.cjs` (CJS), `dist/index.d.ts` and
+  Output for each library: `dist/index.mjs` (ESM), `dist/index.cjs` (CJS), `dist/index.d.mts` and
   `dist/index.d.cts` (types for each), plus source maps.
 
 - **Why both:** a consumer's tool decides the format, not you. Older Node tooling and Jest setups
@@ -123,9 +123,9 @@ One entry per new concept. Template:
   a public library.
 - **Gotchas:** if the same package is loaded once as ESM and once as CJS, you get two copies, so
   module-level state (a cache, a singleton, `instanceof`) can disagree. This is the dual-package
-  hazard; keep libraries stateless. tsup bundles with esbuild but builds types with TypeScript,
-  so a type error can fail `build` even when the JavaScript is fine.
-- **Interview questions:** What does tsup do that `tsc` does not? What is the dual-package hazard?
+  hazard; keep libraries stateless. tsdown writes the bundle and the declarations in separate
+  steps, so a green JavaScript build says nothing about the types: run `check-package` too.
+- **Interview questions:** What does tsdown do that `tsc` does not? What is the dual-package hazard?
   Why does a `.d.cts` file exist? When would you drop CJS?
 
 ## The `exports` map
