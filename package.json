@@ -17,7 +17,7 @@
     "test:tools": "node --test \"tools/*.test.mjs\"",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "turbo run build && changeset publish",
+    "verify": "pnpm format:check && pnpm test:tools && pnpm check:release && turbo run lint typecheck test build check-package",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

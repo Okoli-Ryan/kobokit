@@ -247,10 +247,83 @@ One entry per new concept. Template:
 - **What I saw here:** two notes produced `statement-math` 0.0.0 to 0.1.0 and `narration-parser`
   0.0.0 to 0.0.1. Packages without a note stayed put, and the changelog came from the note text.
 - **Gotchas:** a note naming a private package (an app) is skipped and also left behind, so it
-  never gets cleaned up. Changesets only knows what people write down, so CI should check that a
-  pull request carries a note (a later step). Before 1.0, a minor bump from 0.0.0 gives 0.1.0.
+  never gets cleaned up. Changesets only knows what people write down, so a CI check that a
+  pull request carries a note is worth adding (see decision 75). Before 1.0, a minor bump from 0.0.0 gives 0.1.0.
   When a package changes, packages that depend on it get a patch bump
   (`updateInternalDependencies`). `workspace:*` is rewritten to a real version at publish.
 - **Interview questions:** How does Changesets choose the bump when two notes touch one
   package? How does it differ from semantic-release? What stops an app from being published?
   (`private: true`, plus our guard.) What happens to dependents of a bumped package?
+
+## Turborepo caching in GitHub Actions
+
+- **Analogy:** A shared fridge across kitchen shifts. Each shift (CI run) starts with an empty
+  kitchen, so we carry the previous shift's leftovers in a cool box (`actions/cache`) and only
+  cook what changed.
+- **Minimal example:**
+
+  ```yaml
+  - uses: actions/cache@<sha> # v6.1.0
+    with:
+      path: .turbo/cache
+      key: turbo-${{ runner.os }}-${{ github.sha }}
+      restore-keys: |
+        turbo-${{ runner.os }}-
+  ```
+
+  The exact key never matches (each commit is new), so `restore-keys` loads the newest earlier
+  entry by prefix. Turbo then checks each task's own hash and skips what has not changed.
+
+- **Gotchas:** the cache holds task outputs, not a verdict about your code, so a stale cache can
+  never make a changed package pass. Cache entries are evicted by GitHub after a while. The
+  cache only helps if tasks declare their `outputs` correctly.
+- **Interview questions:** Why a unique key plus `restore-keys`? Local cache versus Remote Cache?
+  What would break if `outputs` were wrong?
+
+## Pinning actions to commit SHAs
+
+- **Analogy:** Ordering a book by its ISBN instead of "the latest edition". The title can be
+  reprinted with different pages; the ISBN cannot.
+- **Minimal example:** `uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1`
+- **Gotchas:** a tag like `v7` is a pointer the maintainer (or an attacker with their access)
+  can move, so a workflow can start running different code with no change in your repo. Pinning
+  a SHA freezes it, but pins go stale, so Dependabot opens update pull requests. For an annotated
+  tag, resolve the commit SHA, not the tag object's SHA. Keep the version in a comment.
+- **Interview questions:** Why does pinning matter more for a job that can publish? What does
+  Dependabot do about stale pins? Which actions need pinning most?
+
+## Trusted Publishing and least-privilege job permissions
+
+- **Analogy:** A hotel key card that opens one door for one night, issued at check-in, versus a
+  master key left in a drawer. An `NPM_TOKEN` secret is the master key; OIDC trusted publishing
+  is the card.
+- **Minimal example:**
+
+  ```yaml
+  permissions: {} # nothing by default
+  jobs:
+    publish:
+      permissions:
+        contents: write
+        id-token: write # lets this job prove who it is to npm
+  ```
+
+- **Gotchas:** only the publish job gets `id-token: write`, so the install and build jobs cannot
+  mint publishing credentials even if a dependency is compromised. npm must be configured to
+  trust the repository and workflow for each package; that lives on npmjs.com, not in this repo.
+  The version pull request needs the repository setting "Allow GitHub Actions to create and
+  approve pull requests". Workflows triggered by `pull_request_target` run with write access and
+  must never run untrusted code.
+- **Interview questions:** What does OIDC replace? Why split pack and publish into separate jobs?
+  What is the blast radius of a leaked `NPM_TOKEN` compared with trusted publishing?
+
+## Secret scanning
+
+- **Analogy:** A metal detector at the door, plus a sweep of the whole building history, since
+  a key dropped last year is still a key.
+- **Gotchas:** secrets live in git history, so the scan checks out every commit
+  (`fetch-depth: 0`). Deleting a leaked secret in a later commit does not help; rotate it. A
+  scanner finds patterns, so it cannot prove a repo is clean. `.env` is ignored by git and
+  `.env.example` holds only empty values.
+- **Interview questions:** Why scan history, not only the latest commit? What do you do after a
+  key is committed? What are false positives and how do you suppress them?
