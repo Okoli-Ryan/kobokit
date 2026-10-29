@@ -8,6 +8,7 @@ allowBuilds:
   unrs-resolver: false
 catalog:
   '@arethetypeswrong/cli': ^0.18.5
+  '@changesets/cli': ^3.0.3
   '@eslint/js': ~9.39.5
   '@jest/globals': ^30.5.2
   '@swc/core': ^1.16.20

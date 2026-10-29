@@ -13,10 +13,16 @@
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "check-package": "turbo run check-package",
+    "check:release": "node tools/check-release.mjs",
+    "test:tools": "node --test \"tools/*.test.mjs\"",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "turbo run build && changeset publish",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
   "devDependencies": {
+    "@changesets/cli": "catalog:",
     "prettier": "^3.9.10",
     "turbo": "^2.11.10"
   }

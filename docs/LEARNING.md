@@ -224,3 +224,33 @@ One entry per new concept. Template:
   `listen` call in `main.ts` lets tests start the server without side effects at import time.
 - **Interview questions:** Why separate creating a server from listening? What would a flaky
   port conflict in CI look like?
+
+## How Changesets turns a change note into a version bump
+
+- **Analogy:** Order slips in a restaurant. Each pull request clips a slip to the rail ("statement-math:
+  minor, added a function"). At release time the head chef collects every slip, prints one
+  combined ticket (the changelog), and raises the menu's version number once.
+- **Minimal example:** a note is a markdown file in `.changeset/`
+
+  ```md
+  ---
+  '@kobokit/statement-math': minor
+  ---
+
+  Add exact subtraction.
+  ```
+
+  `pnpm version-packages` reads all notes, picks the highest bump per package (major beats
+  minor beats patch), updates `package.json`, writes `CHANGELOG.md`, and deletes the used notes.
+  `pnpm release` then builds and runs `changeset publish`.
+
+- **What I saw here:** two notes produced `statement-math` 0.0.0 to 0.1.0 and `narration-parser`
+  0.0.0 to 0.0.1. Packages without a note stayed put, and the changelog came from the note text.
+- **Gotchas:** a note naming a private package (an app) is skipped and also left behind, so it
+  never gets cleaned up. Changesets only knows what people write down, so CI should check that a
+  pull request carries a note (a later step). Before 1.0, a minor bump from 0.0.0 gives 0.1.0.
+  When a package changes, packages that depend on it get a patch bump
+  (`updateInternalDependencies`). `workspace:*` is rewritten to a real version at publish.
+- **Interview questions:** How does Changesets choose the bump when two notes touch one
+  package? How does it differ from semantic-release? What stops an app from being published?
+  (`private: true`, plus our guard.) What happens to dependents of a bumped package?
