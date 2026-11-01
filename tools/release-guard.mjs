@@ -1,6 +1,6 @@
 /**
  * Packages that must never reach npm. A path prefix matches every workspace under it.
- * Keep in step with the "Package" table in the README.
+ * Add a prefix here when you add a new kind of internal package.
  */
 export const NEVER_PUBLISH = ['apps/', 'packages/tsconfig', 'packages/eslint-config'];
 
