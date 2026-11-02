@@ -327,3 +327,22 @@ One entry per new concept. Template:
   `.env.example` holds only empty values.
 - **Interview questions:** Why scan history, not only the latest commit? What do you do after a
   key is committed? What are false positives and how do you suppress them?
+
+## What the first real CI run found that local checks could not
+
+- **Analogy:** A dress rehearsal in the real theatre. Everything worked in the rehearsal room (my
+  Windows machine, then a Linux container), but the stage had one trapdoor nobody had seen.
+- **What happened:** the CI job passed every step on GitHub's runners. Two things failed.
+  1. The gitleaks action scans only `firstPushedCommit^..lastPushedCommit`. On a first push that
+     first commit is the root, which has no parent, so git errored and gitleaks scanned 0 bytes.
+     It also never rescans older history. Fix: run the gitleaks CLI over the whole history.
+  2. With no changesets, the release workflow selected publish mode and tried to publish every
+     package whose version is not on npm, including `0.0.0` placeholders. It failed with E404 only
+     because the packages do not exist yet.
+- **Gotchas:** a green check that scanned nothing is worse than a red one; read what a tool
+  actually did, not just its colour. A tool's description ("scans your history") can be broader
+  than its behaviour. A publish pipeline needs a safe default when there is nothing to release.
+  Pin tool downloads by checksum, and note that Dependabot cannot update those pins.
+- **Interview questions:** How would you know a secret scanner really scanned something? Why does
+  `^` on a root commit fail? What should a release workflow do when there are no changesets?
+  Why test a pipeline on the real runner as well as locally?

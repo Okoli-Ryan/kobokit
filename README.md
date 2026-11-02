@@ -79,8 +79,8 @@ To use an LLM later, copy `.env.example` to `.env` and fill in `OPENAI_API_KEY` 
 Versions are managed with [Changesets](https://github.com/changesets/changesets). In any pull
 request that changes a published package, run `pnpm changeset` and describe the change. When it
 merges, a "Version Packages" pull request is meant to collect the notes; merging that should publish
-to npm through GitHub Actions using npm Trusted Publishing, so no npm token is stored. This flow has
-not run yet. See
+to npm through GitHub Actions using npm Trusted Publishing, so no npm token is stored. This flow has run once: verification and packing passed, and
+publishing failed because the packages do not exist on npm yet. See
 [`docs/DECISIONS.md`](docs/DECISIONS.md) for the setup you must do once on npmjs.com and GitHub.
 
 ## Project docs
