@@ -37,6 +37,27 @@ export interface UnpagedStatement extends StatementHeader {
   transactions: DraftTransaction[];
 }
 
+/** One amount that was changed after the balances were computed. */
+export interface AmountChange {
+  id: string;
+  /** Position in the transactions array. */
+  index: number;
+  page: number;
+  line: number;
+  field: 'debit' | 'credit';
+  original: Kobo;
+  tampered: Kobo;
+}
+
+/** The answer key for a fraud detector: exactly what was altered. */
+export interface TamperRecord {
+  amountChanges: AmountChange[];
+  /** ISO timestamp written to the PDF modification date, when that was tampered with. */
+  pdfModifiedAt?: string;
+}
+
 export interface Statement extends StatementHeader {
   transactions: Transaction[];
+  /** Present only on tampered statements. */
+  tampering?: TamperRecord;
 }

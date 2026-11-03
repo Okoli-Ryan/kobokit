@@ -17,7 +17,7 @@ import { applyMetadata, parseModifiedAt } from './metadata';
 import { drawFooter, drawWatermark } from './watermark';
 
 export interface RenderOptions {
-  /** ISO timestamp for the PDF modification date. Only the "tampered" option sets it. */
+  /** ISO timestamp for the PDF modification date. Defaults to the tamper record, if any. */
   modifiedAt?: string;
 }
 
@@ -54,8 +54,8 @@ export async function renderPdf(
   };
   const pages = paginate(statement.transactions, statement.format, bank.dateStyle);
   for (const page of pages) drawPage(doc, page, pages.length, { statement, bank, fonts });
-  const modified =
-    options.modifiedAt === undefined ? undefined : parseModifiedAt(options.modifiedAt);
+  const modifiedAt = options.modifiedAt ?? statement.tampering?.pdfModifiedAt;
+  const modified = modifiedAt === undefined ? undefined : parseModifiedAt(modifiedAt);
   applyMetadata(doc, statement, bank.name, modified);
   return doc.save({ useObjectStreams: false });
 }
