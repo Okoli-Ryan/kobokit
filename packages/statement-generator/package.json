@@ -47,6 +47,7 @@
     "@arethetypeswrong/cli": "catalog:",
     "@kobokit/eslint-config": "workspace:*",
     "@kobokit/tsconfig": "workspace:*",
+    "@napi-rs/canvas": "^1.1.0",
     "@types/node": "catalog:",
     "eslint": "catalog:",
     "fast-check": "^4.10.2",

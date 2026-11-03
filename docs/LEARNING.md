@@ -405,3 +405,16 @@ One entry per new concept. Template:
 
 - **Gotchas:** Check rows against the stated previous balance, not a recomputed one, or one wrong row would flag every row after it. Check the totals separately: a statement can have consistent rows and a wrong closing balance. Reversals and fees must be tied to the transaction they follow, or you create orphans.
 - **Interview questions:** Why check both per-row and in total? How would a fraud detector use this? What changes if overdrafts are allowed?
+
+## Text-based PDF versus scanned PDF
+
+- **Analogy:** A text PDF is a typed letter: every word is a separate piece you can lift off and read. A scanned PDF is a photograph of that letter: you see the words, but a computer sees only coloured dots until OCR (a person squinting at the photo) turns them back into letters, sometimes wrongly.
+- **Minimal example:**
+
+  ```ts
+  page.drawText('POS PURCHASE PALM MART', { x, y, size, font }); // selectable text
+  // extraction: pdfjs getTextContent() -> items with str "POS PURCHASE PALM MART" and a position
+  ```
+
+- **Gotchas:** Standard fonts only cover WinAnsi characters, so something like the naira sign (₦) would throw or need an embedded font. A parser sees text items and coordinates, not tables: columns are inferred from x positions. Shrink-to-fit text still extracts as one item. Our PDFs have no scanned variant; parsers that need OCR must be tested with a separate dataset.
+- **Interview questions:** How would you tell the two apart programmatically? Why does a scanned statement raise fraud and accuracy risk? What does OCR add to a pipeline's error budget?
