@@ -392,3 +392,16 @@ One entry per new concept. Template:
 
 - **Gotchas:** A property must be a rule that is always true (an invariant), not a re-implementation of the code. Constrain generators so they only produce valid input. On failure, fast-check prints a seed and path to replay the exact case. Keep run counts fast enough for CI.
 - **Interview questions:** What is shrinking? How do you find a good property for a function with no obvious inverse? What does "balances reconcile" look like as a property?
+
+## Reconciliation as an invariant
+
+- **Analogy:** A till at closing time. Opening float plus takings minus payouts must equal what is in the drawer; if not, someone can find the exact transaction by walking the paper roll line by line.
+- **Minimal example:**
+
+  ```ts
+  // each row: balance === previousBalance + credit - debit
+  // whole statement: opening + sum(credit) - sum(debit) === closing
+  ```
+
+- **Gotchas:** Check rows against the stated previous balance, not a recomputed one, or one wrong row would flag every row after it. Check the totals separately: a statement can have consistent rows and a wrong closing balance. Reversals and fees must be tied to the transaction they follow, or you create orphans.
+- **Interview questions:** Why check both per-row and in total? How would a fraud detector use this? What changes if overdrafts are allowed?

@@ -1,10 +1,10 @@
 {
   "category": "bank_charge",
   "templates": [
-    { "text": "ACCOUNT MAINTENANCE FEE", "origin": "invented" },
-    { "text": "SMS ALERT CHARGE {month}", "origin": "invented" },
-    { "text": "TRANSFER FEE /{ref}", "origin": "invented" },
-    { "text": "ATM WITHDRAWAL FEE {terminal}", "origin": "invented" },
-    { "text": "STAMP DUTY CHARGE", "origin": "invented" }
+    { "text": "ACCOUNT MAINTENANCE FEE", "tag": "monthly", "origin": "invented" },
+    { "text": "SMS ALERT CHARGE {month}", "tag": "monthly", "origin": "invented" },
+    { "text": "TRANSFER FEE /{ref}", "tag": "transfer", "origin": "invented" },
+    { "text": "NIP CHARGE {ref}", "tag": "transfer", "origin": "invented" },
+    { "text": "ATM WITHDRAWAL FEE {terminal}", "tag": "atm", "origin": "invented" }
   ]
 }

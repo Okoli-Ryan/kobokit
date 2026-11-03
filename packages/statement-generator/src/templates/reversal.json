@@ -2,7 +2,7 @@
   "category": "reversal",
   "templates": [
     { "text": "REVERSAL OF FAILED TRANSACTION {ref}", "origin": "invented" },
-    { "text": "REV/{ref}/FAILED TRANSFER", "origin": "invented" },
-    { "text": "REFUND FOR UNSUCCESSFUL POS {ref}", "origin": "invented" }
+    { "text": "REV/{ref}/FAILED TRANSACTION", "origin": "invented" },
+    { "text": "REVERSAL {ref} TRANSACTION UNSUCCESSFUL", "origin": "invented" }
   ]
 }

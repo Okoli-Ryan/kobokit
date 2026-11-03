@@ -42,6 +42,11 @@ export function addDays(date: CalendarDate, days: number): CalendarDate {
   return fromDayNumber(toDayNumber(date) + days);
 }
 
+/** Whole days from a to b (negative when b is earlier). */
+export function daysBetween(a: CalendarDate, b: CalendarDate): number {
+  return toDayNumber(b) - toDayNumber(a);
+}
+
 export function daysInMonth(year: number, month: number): number {
   return fromDayNumber(toDayNumber({ year, month: month + 1, day: 1 }) - 1).day;
 }

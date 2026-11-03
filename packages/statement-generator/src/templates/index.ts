@@ -21,7 +21,11 @@ const templateFileSchema = z.object({
   category: z.enum(CATEGORIES),
   templates: z
     .array(
-      z.object({ text: z.string().min(1), origin: z.enum(['invented', 'redacted-real-pattern']) }),
+      z.object({
+        text: z.string().min(1),
+        tag: z.string().optional(),
+        origin: z.enum(['invented', 'redacted-real-pattern']),
+      }),
     )
     .min(1),
 });

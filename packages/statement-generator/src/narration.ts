@@ -43,6 +43,15 @@ export function fillTemplate(text: string, rng: Rng, date: CalendarDate): string
   });
 }
 
-export function makeNarration(category: Category, rng: Rng, date: CalendarDate): string {
-  return fillTemplate(rng.pick(getTemplates(category)).text, rng, date);
+/** A tag narrows the choice, e.g. an ATM fee must not read "ACCOUNT MAINTENANCE FEE". */
+export function makeNarration(
+  category: Category,
+  rng: Rng,
+  date: CalendarDate,
+  tag?: string,
+): string {
+  const all = getTemplates(category);
+  const candidates = tag === undefined ? all : all.filter((template) => template.tag === tag);
+  if (candidates.length === 0) throw new RangeError(`No "${tag}" template for ${category}`);
+  return fillTemplate(rng.pick(candidates).text, rng, date);
 }
