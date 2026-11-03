@@ -1,0 +1,9 @@
+{
+  "category": "bill",
+  "templates": [
+    { "text": "BILL PAYMENT {biller} {ref}", "origin": "invented" },
+    { "text": "UTILITY {biller} METER {ref}", "origin": "invented" },
+    { "text": "SUBSCRIPTION {biller} VIA {channel}", "origin": "invented" },
+    { "text": "{channel} BILLS/{biller}/{ref}", "origin": "invented" }
+  ]
+}

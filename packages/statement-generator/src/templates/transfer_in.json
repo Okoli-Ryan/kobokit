@@ -1,0 +1,10 @@
+{
+  "category": "transfer_in",
+  "templates": [
+    { "text": "TRANSFER FROM {name} /{ref}", "origin": "invented" },
+    { "text": "NIP CR/{name}/PAYMENT/{ref}", "origin": "invented" },
+    { "text": "INWARD TRANSFER {name} SESSION {ref}", "origin": "invented" },
+    { "text": "CREDIT ALERT FROM {name} FOR GOODS", "origin": "invented" },
+    { "text": "MOBILE TRF FROM {name} {ref}", "origin": "invented" }
+  ]
+}

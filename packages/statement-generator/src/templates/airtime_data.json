@@ -1,0 +1,9 @@
+{
+  "category": "airtime_data",
+  "templates": [
+    { "text": "AIRTIME {telco} {phone}", "origin": "invented" },
+    { "text": "DATA BUNDLE {telco} {phone} VIA {channel}", "origin": "invented" },
+    { "text": "VTU RECHARGE {phone} {telco}", "origin": "invented" },
+    { "text": "{channel} AIRTIME TOPUP {phone}", "origin": "invented" }
+  ]
+}

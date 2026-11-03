@@ -1,0 +1,9 @@
+{
+  "category": "loan_repayment",
+  "templates": [
+    { "text": "LOAN REPAYMENT {lender} {ref}", "origin": "invented" },
+    { "text": "{lender} DIRECT DEBIT REPAYMENT {ref}", "origin": "invented" },
+    { "text": "NIP DR/{lender}/REPAYMENT/{ref}", "origin": "invented" },
+    { "text": "INSTALMENT {lender} REF {ref}", "origin": "invented" }
+  ]
+}

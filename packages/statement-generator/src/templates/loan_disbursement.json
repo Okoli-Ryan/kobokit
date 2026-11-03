@@ -1,0 +1,8 @@
+{
+  "category": "loan_disbursement",
+  "templates": [
+    { "text": "LOAN DISBURSEMENT {lender} {ref}", "origin": "invented" },
+    { "text": "{lender} LOAN CREDIT REF {ref}", "origin": "invented" },
+    { "text": "NIP CR/{lender}/DISBURSEMENT/{ref}", "origin": "invented" }
+  ]
+}

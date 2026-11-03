@@ -1,0 +1,8 @@
+{
+  "category": "atm",
+  "templates": [
+    { "text": "ATM WDL {terminal}", "origin": "invented" },
+    { "text": "ATM CASH WITHDRAWAL TERM {terminal}", "origin": "invented" },
+    { "text": "CASH WITHDRAWAL ATM/{terminal}/{ref}", "origin": "invented" }
+  ]
+}

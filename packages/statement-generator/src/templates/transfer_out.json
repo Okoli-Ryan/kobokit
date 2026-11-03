@@ -1,0 +1,10 @@
+{
+  "category": "transfer_out",
+  "templates": [
+    { "text": "TRANSFER TO {name} /{ref}", "origin": "invented" },
+    { "text": "NIP DR/{name}/{ref}", "origin": "invented" },
+    { "text": "OUTWARD TRANSFER {name} SESSION {ref}", "origin": "invented" },
+    { "text": "MOBILE TRF TO {name} {ref}", "origin": "invented" },
+    { "text": "PAYMENT TO {name} REF {ref}", "origin": "invented" }
+  ]
+}

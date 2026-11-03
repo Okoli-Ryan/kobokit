@@ -1,0 +1,9 @@
+{
+  "category": "salary",
+  "templates": [
+    { "text": "SALARY {month} {employer}", "origin": "invented" },
+    { "text": "NIP CR/{employer}/PAYROLL {month}/{ref}", "origin": "invented" },
+    { "text": "PAYROLL CREDIT {employer} REF {ref}", "origin": "invented" },
+    { "text": "STAFF SALARY {month} - {employer}", "origin": "invented" }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "category": "betting",
+  "templates": [
+    { "text": "WALLET FUNDING {bookie} {ref}", "origin": "invented" },
+    { "text": "TRANSFER TO {bookie} /{ref}", "origin": "invented" },
+    { "text": "{bookie} DEPOSIT VIA {channel}", "origin": "invented" },
+    { "text": "BETTING TOPUP {bookie} {ref}", "origin": "invented" }
+  ]
+}

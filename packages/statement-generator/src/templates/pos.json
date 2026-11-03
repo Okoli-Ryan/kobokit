@@ -1,0 +1,9 @@
+{
+  "category": "pos",
+  "templates": [
+    { "text": "POS PURCHASE {merchant} TERM {terminal}", "origin": "invented" },
+    { "text": "POS/{merchant}/{terminal}/{ref}", "origin": "invented" },
+    { "text": "WEB PURCHASE {merchant} {ref}", "origin": "invented" },
+    { "text": "CARD PAYMENT {merchant} LAGOS NG", "origin": "invented" }
+  ]
+}
