@@ -2,6 +2,7 @@ name: Release
 
 # Follows the "Trusted Publishing" workflow from the Changesets guide, using pnpm.
 # Publishing needs no stored npm token: npm trusts this workflow through OIDC (see docs/DECISIONS.md).
+# The pack and publish jobs stay skipped until the PUBLISH_ENABLED repository variable is "true".
 
 on:
   push:
@@ -64,7 +65,10 @@ jobs:
 
   pack:
     name: Verify and pack
-    if: needs.select-mode.outputs.mode == 'publish'
+    # Publishing is opt-in. Without this variable, a push to main would try to publish every package
+    # whose version is not on npm yet, including 0.0.0 placeholders. Turn it on once npm trusts this
+    # workflow and there is real code to release: gh variable set PUBLISH_ENABLED --body true
+    if: needs.select-mode.outputs.mode == 'publish' && vars.PUBLISH_ENABLED == 'true'
     needs: select-mode
     runs-on: ubuntu-latest
     timeout-minutes: 20
