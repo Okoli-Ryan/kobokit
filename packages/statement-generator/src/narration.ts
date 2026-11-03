@@ -35,8 +35,16 @@ const resolvers: Record<string, Resolver> = {
 };
 
 /** An unknown {placeholder} throws, so a typo in a template file fails loudly, not silently. */
-export function fillTemplate(text: string, rng: Rng, date: CalendarDate): string {
+/** `fixed` pins placeholders to one value, e.g. the same employer on every salary line. */
+export function fillTemplate(
+  text: string,
+  rng: Rng,
+  date: CalendarDate,
+  fixed: Readonly<Record<string, string>> = {},
+): string {
   return text.replace(/\{(\w+)\}/g, (_match, key: string) => {
+    const pinned = fixed[key];
+    if (pinned !== undefined) return pinned;
     const resolve = resolvers[key];
     if (!resolve) throw new RangeError(`Unknown placeholder {${key}} in template "${text}"`);
     return resolve(rng, date);
@@ -49,9 +57,10 @@ export function makeNarration(
   rng: Rng,
   date: CalendarDate,
   tag?: string,
+  fixed?: Readonly<Record<string, string>>,
 ): string {
   const all = getTemplates(category);
   const candidates = tag === undefined ? all : all.filter((template) => template.tag === tag);
   if (candidates.length === 0) throw new RangeError(`No "${tag}" template for ${category}`);
-  return fillTemplate(rng.pick(candidates).text, rng, date);
+  return fillTemplate(rng.pick(candidates).text, rng, date, fixed);
 }

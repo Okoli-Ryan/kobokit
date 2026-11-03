@@ -2,6 +2,7 @@ import { MONTHLY_FEE, REVERSIBLE, feeFor } from './charges';
 import { addDays, addMonths, compareDates, daysBetween, type CalendarDate } from './dates';
 import { kobo, type Kobo } from './money';
 import { makeNarration } from './narration';
+import { EMPLOYERS } from './pools';
 import type { Persona } from './personas';
 import { createRng, type Rng } from './rng';
 import type { Category } from './types';
@@ -22,7 +23,10 @@ export interface PlannedEvent {
   narration: string;
 }
 
-type NewEvent = Pick<PlannedEvent, 'date' | 'category' | 'amount' | 'parentSeq'> & { tag?: string };
+type NewEvent = Pick<PlannedEvent, 'date' | 'category' | 'amount' | 'parentSeq'> & {
+  tag?: string;
+  fixed?: Readonly<Record<string, string>>;
+};
 
 interface PlanContext {
   persona: Persona;
@@ -85,8 +89,11 @@ function planSalary(ctx: PlanContext, rng: Rng): void {
   const { salary } = ctx.persona;
   if (!salary) return;
   const amount = pickAmount(rng, salary.amount); // fixed for the whole statement
+  if (amount === 0) return; // a zero-naira salary would print a row with neither debit nor credit
+  const employer = rng.pick(EMPLOYERS); // so is the employer
   for (let day = ctx.period.from; compareDates(day, ctx.period.to) <= 0; day = addDays(day, 1)) {
-    if (day.day === salary.dayOfMonth) ctx.add({ date: day, category: 'salary', amount });
+    if (day.day === salary.dayOfMonth)
+      ctx.add({ date: day, category: 'salary', amount, fixed: { employer } });
   }
 }
 
@@ -97,8 +104,8 @@ export function planEvents(
 ): PlannedEvent[] {
   const events: PlannedEvent[] = [];
   const narrationRng = createRng(`${seed}|narration`);
-  const add = ({ tag, ...event }: NewEvent): number => {
-    const narration = makeNarration(event.category, narrationRng, event.date, tag);
+  const add = ({ tag, fixed, ...event }: NewEvent): number => {
+    const narration = makeNarration(event.category, narrationRng, event.date, tag, fixed);
     events.push({ ...event, seq: events.length, narration });
     return events.length - 1;
   };
