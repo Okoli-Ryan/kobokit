@@ -1,7 +1,7 @@
 {
   "name": "@kobokit/statement-generator",
   "version": "0.0.0",
-  "description": "Synthetic bank statement generator for testing statement analysis (placeholder).",
+  "description": "Synthetic Nigerian-style bank statements (PDF and JSON, with the answer attached) for testing statement parsers, fraud detectors and AI pipelines.",
   "license": "MIT",
   "author": "Ugochukwu Okoli",
   "repository": {
@@ -44,7 +44,9 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "check-package": "publint && attw --pack ."
+    "check-package": "publint && attw --pack .",
+    "samples": "node scripts/make-samples.mjs",
+    "preview-page": "node scripts/pdf-to-png.mjs"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "catalog:",
@@ -63,5 +65,13 @@
   "dependencies": {
     "pdf-lib": "^1.17.1",
     "zod": "^4.6.7"
-  }
+  },
+  "keywords": [
+    "bank-statement",
+    "synthetic-data",
+    "test-data",
+    "fintech",
+    "nigeria",
+    "fixtures"
+  ]
 }
