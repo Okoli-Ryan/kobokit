@@ -346,3 +346,49 @@ One entry per new concept. Template:
 - **Interview questions:** How would you know a secret scanner really scanned something? Why does
   `^` on a root commit fail? What should a release workflow do when there are no changesets?
   Why test a pipeline on the real runner as well as locally?
+
+## Seeded pseudo-random generators
+
+- **Analogy:** A flip-book. Every page looks random, but the book is fixed: start at page 1 (the seed) and you always see the same pictures in the same order. A different book (seed) gives a different, equally random-looking show.
+- **Minimal example:**
+
+  ```ts
+  const a = createRng(42);
+  const b = createRng(42);
+  a.int(1, 6) === b.int(1, 6); // always true, on every machine
+  ```
+
+  `createRng` hashes the seed (FNV-1a) into a 32-bit state, then mulberry32 mixes that state on each call.
+
+- **Gotchas:** `Math.random()` cannot be seeded, so it is banned in the generator. Never read the clock or iterate an object whose key order can change, because either one silently breaks "same seed, same output". Add a new random call in the middle of a flow and every later value shifts, so give separate concerns their own sub-stream (`createRng(`${seed}:salary`)`). A PRNG is not secure: never use it for secrets.
+- **Interview questions:** Why is a seeded generator better for tests than a mocked `Math.random`? What is a period, and why does 32-bit state limit it? Why hash string seeds instead of using them directly?
+
+## Money as integer minor units
+
+- **Analogy:** Counting coins, not pouring water. You can say exactly "1,050 coins"; pouring 10.5 litres into a jug leaves a drop of doubt. Floats are the jug.
+- **Minimal example:**
+
+  ```ts
+  0.1 + 0.2; // 0.30000000000000004
+  kobo(10) + kobo(20); // 30, exactly
+  ```
+
+- **Gotchas:** `JSON.parse` turns big numbers into floats, so keep amounts below `Number.MAX_SAFE_INTEGER` (about ₦90 trillion in kobo) and reject anything else. Dividing (percentages, fees) needs an explicit rounding rule; decide it once and test it. Display formatting is a separate step from storage.
+- **Interview questions:** Why not `Decimal`/`BigNumber`? When would you pick `bigint`? How do you split ₦100.00 three ways without losing a kobo?
+
+## Property-based testing
+
+- **Analogy:** Example tests are a driving test on one road. A property test is a tester who invents hundreds of roads and tells you the first one you crash on, then shrinks it to the shortest road that still crashes.
+- **Minimal example:**
+
+  ```ts
+  fc.assert(
+    fc.property(fc.integer(), fc.integer({ min: -50, max: 50 }), (seed, min) => {
+      const value = createRng(seed).int(min, min + 10);
+      expect(value).toBeGreaterThanOrEqual(min);
+    }),
+  );
+  ```
+
+- **Gotchas:** A property must be a rule that is always true (an invariant), not a re-implementation of the code. Constrain generators so they only produce valid input. On failure, fast-check prints a seed and path to replay the exact case. Keep run counts fast enough for CI.
+- **Interview questions:** What is shrinking? How do you find a good property for a function with no obvious inverse? What does "balances reconcile" look like as a property?
