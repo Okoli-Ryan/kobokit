@@ -1,1 +1,13 @@
-export { describeStatementGenerator } from './statement-generator';
+export { BANKS, getBank, type BankProfile, type FormatFamily } from './banks';
+export { generateStatement, type GeneratedStatement } from './build';
+export { PDF_PRODUCER, WATERMARK_TEXT } from './constants';
+export { toJson } from './json';
+export { DEFAULT_START, type GenerateOptions } from './generate';
+export { verifyBalances, type BalanceCheck } from './ledger';
+export { formatKobo, kobo, naira, type Kobo } from './money';
+export { renderPdf, type RenderOptions } from './pdf/render';
+export { parsePersona, type Persona, type PersonaInput } from './personas';
+export { BUILT_IN_PERSONAS, getBuiltInPersona } from './personas-builtin';
+export type { AmountChange, Statement, TamperRecord, Transaction } from './statement';
+export { tamperStatement, type TamperOptions } from './tamper';
+export { CATEGORIES, type Category } from './types';

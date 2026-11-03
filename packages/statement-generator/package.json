@@ -11,6 +11,9 @@
   },
   "type": "module",
   "sideEffects": false,
+  "bin": {
+    "kobokit-statements": "./dist/cli.mjs"
+  },
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.cts",
