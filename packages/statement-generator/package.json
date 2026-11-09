@@ -1,6 +1,6 @@
 {
   "name": "@kobokit/statement-generator",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Synthetic Nigerian-style bank statements (PDF and JSON, with the answer attached) for testing statement parsers, fraud detectors and AI pipelines.",
   "license": "MIT",
   "author": "Ugochukwu Okoli",
