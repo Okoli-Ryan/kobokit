@@ -39,7 +39,7 @@ It is a test-data tool. It helps you measure whether your parser, detector or mo
 - **Obviously fake identities:** account numbers always start with `000`; names are random pairs from a made-up pool; narrations come from templates marked `origin: "invented"`.
 - **No real data in, none out.** Fee amounts, phone numbers and similar details are invented and marked `TODO` in the source. They are not claims about any real bank or rule.
 
-The API accepts a custom `BankProfile` object (see [`generateStatement`](#api-reference)). If you use that, name it with a fictional bank. The watermark, footer and metadata still apply, but the bank name is yours to choose responsibly.
+The `bank` option takes only the four built-in ids, and `renderPdf` rejects any bank profile that is not an exact copy of one of them, so a different bank name cannot be printed through this package.
 
 ## Install
 
@@ -322,13 +322,13 @@ it('parses the demo statement', () => {
 
 ### `GenerateOptions`
 
-| Field     | Type                    | Required | Description                                                                                              |
-| --------- | ----------------------- | -------- | -------------------------------------------------------------------------------------------------------- |
-| `seed`    | `string \| number`      | yes      | Same seed and options give the same statement.                                                           |
-| `persona` | `string \| Persona`     | yes      | A built-in id (`salaried`, `trader`, `gig-worker`, `bettor`, `loan-stacker`) or a custom persona object. |
-| `bank`    | `string \| BankProfile` | yes      | A bank id (`harmattan`, `kola`, `ember`, `savanna`) or a custom profile.                                 |
-| `months`  | `number`                | yes      | Whole number from 1 to 12.                                                                               |
-| `start`   | `string`                | no       | First day, `YYYY-MM-DD`. Defaults to `2026-01-01`. The period ends the day before `start` plus `months`. |
+| Field     | Type                | Required | Description                                                                                              |
+| --------- | ------------------- | -------- | -------------------------------------------------------------------------------------------------------- |
+| `seed`    | `string \| number`  | yes      | Same seed and options give the same statement.                                                           |
+| `persona` | `string \| Persona` | yes      | A built-in id (`salaried`, `trader`, `gig-worker`, `bettor`, `loan-stacker`) or a custom persona object. |
+| `bank`    | `string`            | yes      | A built-in bank id: `harmattan`, `kola`, `ember` or `savanna`.                                           |
+| `months`  | `number`            | yes      | Whole number from 1 to 12.                                                                               |
+| `start`   | `string`            | no       | First day, `YYYY-MM-DD`. Defaults to `2026-01-01`. The period ends the day before `start` plus `months`. |
 
 ### `TamperOptions`
 
@@ -558,7 +558,7 @@ PDFs are deterministic too: the creation date is derived from the statement's pe
 | `generateStatement`                 | `RangeError` | `months` is not a whole number from 1 to 12; unknown persona or bank id; `start` is not a real date.                                                                          |
 | `generateStatement`, `parsePersona` | `TypeError`  | A custom persona fails validation (inverted range, float kobo, probability above 1, a salary day above 28, a category a persona may not use). The message lists each problem. |
 | `tamperStatement`                   | `RangeError` | Neither `amounts` nor `modifiedAt` given; fewer than `amounts` rows are large enough; `modifiedAt` is not a valid timestamp.                                                  |
-| `renderPdf`                         | `RangeError` | `options.modifiedAt` is not a valid timestamp.                                                                                                                                |
+| `renderPdf`                         | `RangeError` | `options.modifiedAt` is not a valid timestamp, or the bank profile is not an exact copy of a built-in bank.                                                                   |
 | `kobo`, `naira`                     | `RangeError` | The result is not a safe integer.                                                                                                                                             |
 
 ## Known limits

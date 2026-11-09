@@ -1,5 +1,5 @@
 import { PDFDocument, StandardFonts } from 'pdf-lib';
-import type { BankProfile } from '../banks';
+import { requireKnownBank, type BankProfile } from '../banks';
 import { FAMILIES } from '../layout/families';
 import { paginate, type Page } from '../layout/paginate';
 import type { Statement } from '../statement';
@@ -44,9 +44,10 @@ interface DrawInput {
 /** Text is drawn with a standard font, so every character stays selectable and extractable. */
 export async function renderPdf(
   statement: Statement,
-  bank: BankProfile,
+  bankProfile: BankProfile,
   options: RenderOptions = {},
 ): Promise<Uint8Array> {
+  const bank = requireKnownBank(bankProfile);
   const doc = await PDFDocument.create({ updateMetadata: false });
   const fonts: Fonts = {
     regular: await doc.embedFont(StandardFonts.Helvetica),

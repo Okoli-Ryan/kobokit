@@ -1,4 +1,4 @@
-import { getBank, type BankProfile } from './banks';
+import { getBank } from './banks';
 import { addDays, addMonths, parseIsoDate, toIsoDate } from './dates';
 import { generateHolder } from './identity';
 import { runLedger } from './ledger';
@@ -13,8 +13,8 @@ export interface GenerateOptions {
   seed: string | number;
   /** A built-in persona id, or a custom persona object (validated here). */
   persona: string | Persona;
-  /** A bank id such as "harmattan". */
-  bank: string | BankProfile;
+  /** One of the built-in fictional bank ids: harmattan, kola, ember or savanna. */
+  bank: string;
   /** 1 to 12. */
   months: number;
   /** First day of the statement, YYYY-MM-DD. Fixed default so output never depends on today's date. */
@@ -37,7 +37,7 @@ export function generateStatementData(options: GenerateOptions): UnpagedStatemen
     typeof options.persona === 'string'
       ? getBuiltInPersona(options.persona)
       : parsePersona(options.persona);
-  const bank = typeof options.bank === 'string' ? getBank(options.bank) : options.bank;
+  const bank = getBank(options.bank);
   const from = parseIsoDate(options.start ?? DEFAULT_START);
   const period = { from, to: addDays(addMonths(from, months), -1) };
 

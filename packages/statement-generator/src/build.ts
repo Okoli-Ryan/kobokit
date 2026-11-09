@@ -11,7 +11,7 @@ export interface GeneratedStatement {
 
 /** The whole pipeline up to (not including) the PDF: data, then page and line positions. */
 export function generateStatement(options: GenerateOptions): GeneratedStatement {
-  const bank = typeof options.bank === 'string' ? getBank(options.bank) : options.bank;
-  const data = generateStatementData({ ...options, bank });
+  const bank = getBank(options.bank);
+  const data = generateStatementData(options);
   return { statement: withPositions(data, bank.dateStyle), bank };
 }
