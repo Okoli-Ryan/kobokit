@@ -1,5 +1,7 @@
 node_modules
 dist
+# Folder the kobokit-statements README examples write to
+out/
 .output
 .turbo
 coverage

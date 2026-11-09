@@ -11,9 +11,10 @@ against digital-lending rules.
 
 <!-- TODO: cite a source for the bureau-coverage claim before publishing, and keep it qualitative until then. -->
 
-> **Status: early.** Every package is a placeholder with one export and one test, and nothing is
-> published to npm yet. The tooling around them (build, lint, test, CI, release) is the part that
-> is finished.
+> **Status: early.** `@kobokit/statement-generator` is built (see its
+> [README](packages/statement-generator/README.md)); every other package is still a placeholder
+> with one export and one test. Nothing is published to npm yet. The tooling around them (build,
+> lint, test, CI, release) is finished.
 
 ## Packages
 
